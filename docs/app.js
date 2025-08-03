@@ -17,54 +17,46 @@ function checkBrowserSupport() {
   return true;
 }
 
+async function testSingleModel(path, modelName) {
+  try {
+    console.log(`🔄 Testing ${modelName} at: ${path}`);
+
+    // First check if the file exists
+    const response = await fetch(path);
+    if (!response.ok) {
+      throw new Error(`File not found: ${path} (Status: ${response.status})`);
+    }
+
+    console.log(`📁 ${modelName} file exists`);
+
+    // Try to load the model
+    const model = await tf.loadLayersModel(path);
+    console.log(`✅ ${modelName} model loaded successfully`);
+
+    return model;
+
+  } catch (error) {
+    console.error(`❌ Failed to load ${modelName}:`, error.message);
+    throw error;
+  }
+}
+
 async function loadModels() {
   try {
     console.log("🔄 Loading models...");
+    console.log("Current location:", window.location.href);
 
-    // Try different possible paths for model locations
-    const possiblePaths = [
-      // If models are in docs/models folder (most likely for your setup)
-      { age: './models/age/model.json', gender: './models/gender/model.json', emotion: './models/emotion/model.json' },
-      // If models are in docs folder
-      { age: './docs/models/age/model.json', gender: './docs/models/gender/model.json', emotion: './docs/models/emotion/model.json' },
-      // Alternative structure
-      { age: './age/model.json', gender: './gender/model.json', emotion: './emotion/model.json' }
-    ];
+    // Your models should be at these paths based on your GitHub structure
+    const modelPaths = {
+      age: './models/age/model.json',
+      gender: './models/gender/model.json',
+      emotion: './models/emotion/model.json'
+    };
 
-    let modelsLoaded = false;
-    let lastError = null;
-
-    // Try each path configuration
-    for (let pathConfig of possiblePaths) {
-      try {
-        console.log(`🔄 Trying path configuration: ${pathConfig.age}`);
-
-        // Try to load all models with this path configuration
-        ageModel = await tf.loadLayersModel(pathConfig.age);
-        console.log("✅ Age model loaded");
-
-        genderModel = await tf.loadLayersModel(pathConfig.gender);
-        console.log("✅ Gender model loaded");
-
-        emotionModel = await tf.loadLayersModel(pathConfig.emotion);
-        console.log("✅ Emotion model loaded");
-
-        modelsLoaded = true;
-        break; // Success! Exit the loop
-
-      } catch (error) {
-        console.log(`❌ Failed to load with path: ${pathConfig.age}`);
-        lastError = error;
-        // Reset any partially loaded models
-        if (ageModel) { ageModel.dispose(); ageModel = null; }
-        if (genderModel) { genderModel.dispose(); genderModel = null; }
-        if (emotionModel) { emotionModel.dispose(); emotionModel = null; }
-      }
-    }
-
-    if (!modelsLoaded) {
-      throw new Error(`Failed to load models from any path. Last error: ${lastError.message}`);
-    }
+    // Load each model individually with detailed error reporting
+    ageModel = await testSingleModel(modelPaths.age, 'Age');
+    genderModel = await testSingleModel(modelPaths.gender, 'Gender');
+    emotionModel = await testSingleModel(modelPaths.emotion, 'Emotion');
 
     // Mark models as loaded globally
     window.modelsLoaded = true;
@@ -75,12 +67,31 @@ async function loadModels() {
     if (predictBtn) {
       predictBtn.disabled = false;
       predictBtn.style.opacity = '1';
+      predictBtn.textContent = '🔮 Predict';
+    }
+
+    // Update status
+    const statusDiv = document.getElementById('model-status');
+    if (statusDiv) {
+      statusDiv.textContent = '✅ Models ready';
+      statusDiv.style.color = 'green';
     }
 
   } catch (error) {
     console.error("❌ Error loading models:", error);
-    alert('Failed to load AI models. Please check that model files are properly uploaded to your repository.');
+
+    // Show detailed error to user
+    const errorMsg = `Failed to load AI models: ${error.message}\n\nPlease check:\n1. Model files are uploaded correctly\n2. File paths are correct\n3. Internet connection is stable`;
+    alert(errorMsg);
+
     window.modelsLoaded = false;
+
+    // Update status
+    const statusDiv = document.getElementById('model-status');
+    if (statusDiv) {
+      statusDiv.textContent = '❌ Models failed to load';
+      statusDiv.style.color = 'red';
+    }
   }
 }
 
@@ -198,10 +209,26 @@ async function predict() {
     const genderProb = (await genderPred.data())[0];
     const emotionProb = (await emotionPred.data())[0];
 
-    // Update results
-    document.getElementById('age-result').innerText = ageProb > 0.5 ? 'Elderly' : 'Adult';
-    document.getElementById('gender-result').innerText = genderProb > 0.5 ? 'Male' : 'Female';
-    document.getElementById('emotion-result').innerText = emotionProb > 0.5 ? 'Sad' : 'Happy';
+    // Update results with animation
+    const ageResult = document.getElementById('age-result');
+    const genderResult = document.getElementById('gender-result');
+    const emotionResult = document.getElementById('emotion-result');
+
+    ageResult.innerText = ageProb > 0.5 ? 'Elderly' : 'Adult';
+    genderResult.innerText = genderProb > 0.5 ? 'Male' : 'Female';
+    emotionResult.innerText = emotionProb > 0.5 ? 'Sad' : 'Happy';
+
+    // Add animation class
+    ageResult.classList.add('updated');
+    genderResult.classList.add('updated');
+    emotionResult.classList.add('updated');
+
+    // Remove animation class after animation completes
+    setTimeout(() => {
+      ageResult.classList.remove('updated');
+      genderResult.classList.remove('updated');
+      emotionResult.classList.remove('updated');
+    }, 600);
 
     console.log("✅ Prediction completed");
     console.log(`Age: ${ageProb > 0.5 ? 'Elderly' : 'Adult'} (${ageProb.toFixed(3)})`);
@@ -236,6 +263,7 @@ window.addEventListener('load', async () => {
   if (predictBtn) {
     predictBtn.disabled = true;
     predictBtn.style.opacity = '0.5';
+    predictBtn.textContent = '⏳ Loading...';
   }
 
   // Load models and setup webcam simultaneously

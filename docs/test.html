@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Model Loading Test</title>
+</head>
+<body>
+    <h1>🔍 Model Loading Test</h1>
+    <div id="results"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
+    <script>
+        async function testModelLoading() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<h2>Testing model loading...</h2>';
+
+            // Test paths that should work for your setup
+            const testPaths = [
+                './models/age/model.json',
+                './models/gender/model.json',
+                './models/emotion/model.json'
+            ];
+
+            for (let path of testPaths) {
+                try {
+                    resultsDiv.innerHTML += `<p>🔄 Testing: ${path}</p>`;
+
+                    // First test if file exists
+                    const response = await fetch(path);
+                    if (!response.ok) {
+                        resultsDiv.innerHTML += `<p style="color: red;">❌ File not found: ${path} (${response.status})</p>`;
+                        continue;
+                    }
+
+                    resultsDiv.innerHTML += `<p style="color: blue;">📁 File exists: ${path}</p>`;
+
+                    // Try to load as TensorFlow model
+                    const model = await tf.loadLayersModel(path);
+                    resultsDiv.innerHTML += `<p style="color: green;">✅ Model loaded successfully: ${path}</p>`;
+                    resultsDiv.innerHTML += `<p>📊 Model summary: ${model.layers.length} layers</p>`;
+
+                    // Clean up
+                    model.dispose();
+
+                } catch (error) {
+                    resultsDiv.innerHTML += `<p style="color: red;">❌ Error loading ${path}: ${error.message}</p>`;
+                }
+            }
+
+            resultsDiv.innerHTML += `<h3>Current URL: ${window.location.href}</h3>`;
+            resultsDiv.innerHTML += `<h3>Base URL: ${window.location.origin}${window.location.pathname}</h3>`;
+        }
+
+        // Wait for TensorFlow.js to load, then test
+        window.addEventListener('load', () => {
+            if (window.tf) {
+                testModelLoading();
+            } else {
+                document.getElementById('results').innerHTML = '<p style="color: red;">❌ TensorFlow.js not loaded</p>';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 let ageModel, genderModel, emotionModel;
 
 async function loadModels() {
-  ageModel = await tf.loadLayersModel('models/age/model.json');
-  genderModel = await tf.loadLayersModel('models/gender/model.json');
-  emotionModel = await tf.loadLayersModel('models/emotion/model.json');
+  ageModel = await tf.loadLayersModel('./models/age/model.json');
+  genderModel = await tf.loadLayersModel('./models/gender/model.json');
+  emotionModel = await tf.loadLayersModel('./models/emotion/model.json');
   console.log("✅ Models loaded");
 }
 

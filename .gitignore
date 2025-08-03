@@ -1,0 +1,24 @@
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore Python and Colab junk
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.ipynb~
+
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore model cache/logs
+*.log
+*.csv~
+*.tmp
+
+# Ignore backup files
+*.bak
+*.swp
+
+.jupyter/

@@ -1,24 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Edge AI - Age, Gender & Emotion</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Ensure HTTPS for GitHub Pages -->
+  <script>
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      location.replace('https:' + window.location.href.substring(window.location.protocol.length));
+    }
+  </script>
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Edge AI - Face Attribute Recognition</h1>
+  <div class="container">
+    <h1>🤖 Edge AI - Face Attribute Recognition</h1>
+    <p class="subtitle">Real-time Age, Gender & Emotion Detection</p>
 
-  <video id="webcam" autoplay playsinline width="320" height="240"></video>
-  <button id="predict-btn">Predict</button>
-  <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+    <!-- Camera Status -->
+    <div id="camera-status" class="status">⏳ Initializing camera...</div>
 
-  <div id="results">
-    <p><strong>Age:</strong> <span id="age-result">-</span></p>
-    <p><strong>Gender:</strong> <span id="gender-result">-</span></p>
-    <p><strong>Emotion:</strong> <span id="emotion-result">-</span></p>
+    <!-- Video Feed -->
+    <div class="video-container">
+      <video id="webcam" autoplay playsinline width="320" height="240"></video>
+      <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button id="predict-btn" disabled>🔮 Predict</button>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="results">
+      <div class="result-item">
+        <span class="label">👤 Age:</span>
+        <span id="age-result" class="value">-</span>
+      </div>
+      <div class="result-item">
+        <span class="label">⚥ Gender:</span>
+        <span id="gender-result" class="value">-</span>
+      </div>
+      <div class="result-item">
+        <span class="label">😊 Emotion:</span>
+        <span id="emotion-result" class="value">-</span>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+      <h3>📋 Instructions:</h3>
+      <ol>
+        <li>Allow camera access when prompted</li>
+        <li>Position your face in the camera view</li>
+        <li>Click "Predict" to analyze your face</li>
+        <li>View the AI predictions below</li>
+      </ol>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div class="troubleshooting">
+      <h3>⚠️ Having issues?</h3>
+      <ul>
+        <li>Make sure you're using <strong>HTTPS</strong></li>
+        <li>Allow camera permissions in your browser</li>
+        <li>Use a modern browser (Chrome, Firefox, Safari)</li>
+        <li>Check that your camera is not being used by another app</li>
+      </ul>
+    </div>
   </div>
 
+  <!-- Load TensorFlow.js -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
+
+  <!-- Load our app -->
   <script src="app.js"></script>
 </body>
 </html>

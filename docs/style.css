@@ -1,35 +1,219 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  text-align: center;
-  background-color: #f9f9f9;
-  padding: 20px;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-h1 {
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
   color: #333;
 }
 
-video {
-  border: 2px solid #666;
-  border-radius: 8px;
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
   margin-bottom: 10px;
+  font-size: 2.5em;
+  font-weight: bold;
+}
+
+.subtitle {
+  text-align: center;
+  color: #7f8c8d;
+  margin-bottom: 30px;
+  font-size: 1.1em;
+}
+
+.status {
+  text-align: center;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+}
+
+.video-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+video {
+  border: 3px solid #3498db;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+  max-width: 100%;
+  height: auto;
+}
+
+.controls {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #0077cc;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  background: linear-gradient(45deg, #3498db, #2980b9);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 50px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+  min-width: 150px;
 }
 
-button:hover {
-  background-color: #005fa3;
+button:hover:not(:disabled) {
+  background: linear-gradient(45deg, #2980b9, #3498db);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.6);
 }
 
-#results {
-  margin-top: 20px;
+button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.results {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 30px;
+  border: 2px solid #e9ecef;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e9ecef;
   font-size: 18px;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.value {
+  background: #3498db;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  min-width: 80px;
+  text-align: center;
+}
+
+.instructions {
+  background: #e8f5e8;
+  border-left: 5px solid #27ae60;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.instructions h3 {
+  color: #27ae60;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+}
+
+.instructions ol {
+  padding-left: 20px;
+}
+
+.instructions li {
+  margin-bottom: 8px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.troubleshooting {
+  background: #fff3cd;
+  border-left: 5px solid #ffc107;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.troubleshooting h3 {
+  color: #856404;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+}
+
+.troubleshooting ul {
+  padding-left: 20px;
+}
+
+.troubleshooting li {
+  margin-bottom: 8px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  video {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  button {
+    padding: 12px 25px;
+    font-size: 16px;
+  }
+
+  .result-item {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .instructions, .troubleshooting {
+    padding: 15px;
+  }
+}
+
+/* Animation for successful predictions */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.value.updated {
+  animation: pulse 0.6s ease-in-out;
 }

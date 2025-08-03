@@ -55,3 +55,16 @@ window.addEventListener('load', async () => {
   await loadModels();
   await setupWebcam();
 });
+
+async function setupWebcam() {
+  console.log("Requesting camera access...");
+  const webcam = document.getElementById('webcam');
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    console.log("Camera stream obtained");
+    webcam.srcObject = stream;
+  } catch (err) {
+    console.error("Camera error:", err);
+  }
+}

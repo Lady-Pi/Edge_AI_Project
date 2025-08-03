@@ -68,4 +68,4 @@ async function setupWebcam() {
     console.error("Camera error:", err);
   }
 }
-<script src="app.js?v=2"></script>
+

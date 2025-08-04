@@ -314,6 +314,15 @@ async function predict() {
   }
 }
 
+function downloadCanvasImage() {
+  const canvas = document.getElementById('canvas');
+  const link = document.createElement('a');
+  link.download = `webcam_capture_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+
 function downloadPerformanceData() {
   if (!window.performanceLog || window.performanceLog.length === 0) {
     alert('No performance data available. Run some predictions first!');

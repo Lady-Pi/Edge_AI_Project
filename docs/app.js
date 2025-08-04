@@ -1,6 +1,7 @@
 let ageModel, genderModel, emotionModel;
 let currentStream = null;
-let currentFacingMode = 'user'; // 'user' for front camera, 'environment' for back camera
+let currentFacingMode = 'user';
+let performanceLog = [];
 
 // Check if browser supports required APIs
 function checkBrowserSupport() {
@@ -21,6 +22,7 @@ function checkBrowserSupport() {
 
 async function testSingleModel(path, modelName) {
   try {
+    const startTime = performance.now();
     console.log(`🔄 Testing ${modelName} at: ${path}`);
 
     // First check if the file exists
@@ -33,7 +35,18 @@ async function testSingleModel(path, modelName) {
 
     // Try to load the model
     const model = await tf.loadLayersModel(path);
-    console.log(`✅ ${modelName} model loaded successfully`);
+    const loadTime = performance.now() - startTime;
+
+    console.log(`✅ ${modelName} model loaded successfully in ${loadTime.toFixed(2)}ms`);
+
+    // Store performance data
+    const modelSize = await fetch(path).then(r => r.headers.get('content-length') || 'Unknown');
+    window.performanceData = window.performanceData || {};
+    window.performanceData[modelName] = {
+      loadTime: loadTime,
+      size: modelSize,
+      path: path
+    };
 
     return model;
 
@@ -45,6 +58,7 @@ async function testSingleModel(path, modelName) {
 
 async function loadModels() {
   try {
+    const totalStartTime = performance.now();
     console.log("🔄 Loading models...");
     console.log("Current location:", window.location.href);
 
@@ -60,9 +74,12 @@ async function loadModels() {
     genderModel = await testSingleModel(modelPaths.gender, 'Gender');
     emotionModel = await testSingleModel(modelPaths.emotion, 'Emotion');
 
+    const totalLoadTime = performance.now() - totalStartTime;
+    console.log(`✅ All models loaded in ${totalLoadTime.toFixed(2)}ms`);
+
     // Mark models as loaded globally
     window.modelsLoaded = true;
-    console.log("✅ All models loaded successfully");
+    window.totalModelLoadTime = totalLoadTime;
 
     // Enable predict button
     const predictBtn = document.getElementById('predict-btn');
@@ -75,20 +92,25 @@ async function loadModels() {
     // Update status
     const statusDiv = document.getElementById('model-status');
     if (statusDiv) {
-      statusDiv.textContent = '✅ Models ready';
+      statusDiv.textContent = `✅ Models ready (${totalLoadTime.toFixed(0)}ms)`;
       statusDiv.style.color = 'green';
+    }
+
+    // Show performance button
+    const perfBtn = document.getElementById('performance-btn');
+    if (perfBtn) {
+      perfBtn.disabled = false;
+      perfBtn.style.opacity = '1';
     }
 
   } catch (error) {
     console.error("❌ Error loading models:", error);
 
-    // Show detailed error to user
     const errorMsg = `Failed to load AI models: ${error.message}\n\nPlease check:\n1. Model files are uploaded correctly\n2. File paths are correct\n3. Internet connection is stable`;
     alert(errorMsg);
 
     window.modelsLoaded = false;
 
-    // Update status
     const statusDiv = document.getElementById('model-status');
     if (statusDiv) {
       statusDiv.textContent = '❌ Models failed to load';
@@ -98,21 +120,17 @@ async function loadModels() {
 }
 
 async function switchCamera() {
-  // Toggle facing mode
   currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
 
-  // Stop current stream if it exists
   if (currentStream) {
     currentStream.getTracks().forEach(track => track.stop());
   }
 
-  // Update button text
   const switchBtn = document.getElementById('switch-camera-btn');
   if (switchBtn) {
     switchBtn.textContent = currentFacingMode === 'user' ? 'Switch to Back Camera' : 'Switch to Front Camera';
   }
 
-  // Setup webcam with new facing mode
   await setupWebcam();
 }
 
@@ -121,7 +139,6 @@ async function setupWebcam() {
   const webcam = document.getElementById('webcam');
 
   try {
-    // Check for HTTPS
     if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
       throw new Error('Camera access requires HTTPS. Please use https:// instead of http://');
     }
@@ -135,24 +152,21 @@ async function setupWebcam() {
     };
 
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    currentStream = stream; // Store the current stream
+    currentStream = stream;
     console.log("✅ Camera stream obtained");
 
     webcam.srcObject = stream;
 
-    // Wait for video to be ready
     webcam.addEventListener('loadedmetadata', () => {
       console.log("✅ Video metadata loaded");
     });
 
-    // Show success message
     const statusDiv = document.getElementById('camera-status');
     if (statusDiv) {
       statusDiv.textContent = `✅ Camera ready (${currentFacingMode === 'user' ? 'Front' : 'Back'})`;
       statusDiv.style.color = 'green';
     }
 
-    // Enable camera switch button
     const switchBtn = document.getElementById('switch-camera-btn');
     if (switchBtn) {
       switchBtn.disabled = false;
@@ -178,7 +192,6 @@ async function setupWebcam() {
 
     alert(errorMessage);
 
-    // Show error status
     const statusDiv = document.getElementById('camera-status');
     if (statusDiv) {
       statusDiv.textContent = '❌ Camera failed';
@@ -212,47 +225,68 @@ async function predict() {
   const ctx = canvas.getContext('2d');
 
   try {
-    // Check if webcam is ready
     if (webcam.readyState !== 4) {
       alert('Camera is not ready. Please wait for the camera to load.');
       return;
     }
 
+    const predictionStartTime = performance.now();
     console.log("🔄 Running prediction...");
 
     // Draw current frame to canvas
     ctx.drawImage(webcam, 0, 0, canvas.width, canvas.height);
 
-    // Preprocess images for each model
+    // Preprocessing time
+    const preprocessStartTime = performance.now();
     const ageInput = preprocessImage(canvas, 224);
     const genderInput = preprocessImage(canvas, 224);
     const emotionInput = preprocessImage(canvas, 48, true);
+    const preprocessTime = performance.now() - preprocessStartTime;
 
-    // Run predictions
+    // Inference time
+    const inferenceStartTime = performance.now();
     const agePred = await ageModel.predict(ageInput);
     const genderPred = await genderModel.predict(genderInput);
     const emotionPred = await emotionModel.predict(emotionInput);
+    const inferenceTime = performance.now() - inferenceStartTime;
 
     // Get prediction values
     const ageProb = (await agePred.data())[0];
     const genderProb = (await genderPred.data())[0];
     const emotionProb = (await emotionPred.data())[0];
 
+    const totalPredictionTime = performance.now() - predictionStartTime;
+
+    // Store performance data
+    const performanceData = {
+      timestamp: new Date().toISOString(),
+      totalTime: totalPredictionTime,
+      preprocessTime: preprocessTime,
+      inferenceTime: inferenceTime,
+      predictions: {
+        age: { value: ageProb, label: ageProb > 0.5 ? 'Elderly' : 'Adult' },
+        gender: { value: genderProb, label: genderProb > 0.5 ? 'Male' : 'Female' },
+        emotion: { value: emotionProb, label: emotionProb > 0.5 ? 'Sad' : 'Happy' }
+      }
+    };
+
+    performanceLog.push(performanceData);
+    window.performanceLog = performanceLog; // Make available globally
+
     // Update results with animation
     const ageResult = document.getElementById('age-result');
     const genderResult = document.getElementById('gender-result');
     const emotionResult = document.getElementById('emotion-result');
 
-    ageResult.innerText = ageProb > 0.5 ? 'Elderly' : 'Adult';
-    genderResult.innerText = genderProb > 0.5 ? 'Male' : 'Female';
-    emotionResult.innerText = emotionProb > 0.5 ? 'Sad' : 'Happy';
+    ageResult.innerText = performanceData.predictions.age.label;
+    genderResult.innerText = performanceData.predictions.gender.label;
+    emotionResult.innerText = performanceData.predictions.emotion.label;
 
     // Add animation class
     ageResult.classList.add('updated');
     genderResult.classList.add('updated');
     emotionResult.classList.add('updated');
 
-    // Remove animation class after animation completes
     setTimeout(() => {
       ageResult.classList.remove('updated');
       genderResult.classList.remove('updated');
@@ -260,9 +294,11 @@ async function predict() {
     }, 600);
 
     console.log("✅ Prediction completed");
-    console.log(`Age: ${ageProb > 0.5 ? 'Elderly' : 'Adult'} (${ageProb.toFixed(3)})`);
-    console.log(`Gender: ${genderProb > 0.5 ? 'Male' : 'Female'} (${genderProb.toFixed(3)})`);
-    console.log(`Emotion: ${emotionProb > 0.5 ? 'Sad' : 'Happy'} (${emotionProb.toFixed(3)})`);
+    console.log(`⏱️ Total time: ${totalPredictionTime.toFixed(2)}ms`);
+    console.log(`📊 Preprocessing: ${preprocessTime.toFixed(2)}ms, Inference: ${inferenceTime.toFixed(2)}ms`);
+    console.log(`Age: ${performanceData.predictions.age.label} (${ageProb.toFixed(3)})`);
+    console.log(`Gender: ${performanceData.predictions.gender.label} (${genderProb.toFixed(3)})`);
+    console.log(`Emotion: ${performanceData.predictions.emotion.label} (${emotionProb.toFixed(3)})`);
 
     // Clean up tensors
     ageInput.dispose();
@@ -278,18 +314,55 @@ async function predict() {
   }
 }
 
+function downloadPerformanceData() {
+  if (!window.performanceLog || window.performanceLog.length === 0) {
+    alert('No performance data available. Run some predictions first!');
+    return;
+  }
+
+  // Create comprehensive performance report
+  const report = {
+    deviceInfo: {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+      hardwareConcurrency: navigator.hardwareConcurrency,
+      memory: navigator.deviceMemory || 'Unknown'
+    },
+    modelInfo: window.performanceData || {},
+    totalModelLoadTime: window.totalModelLoadTime || 'Unknown',
+    predictions: window.performanceLog,
+    summary: {
+      totalPredictions: window.performanceLog.length,
+      averageInferenceTime: window.performanceLog.reduce((sum, log) => sum + log.inferenceTime, 0) / window.performanceLog.length,
+      averageTotalTime: window.performanceLog.reduce((sum, log) => sum + log.totalTime, 0) / window.performanceLog.length
+    }
+  };
+
+  // Download as JSON
+  const dataStr = JSON.stringify(report, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `edge_ai_performance_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`;
+  link.click();
+
+  URL.revokeObjectURL(url);
+  console.log('📥 Performance data downloaded');
+}
+
 // Initialize everything when page loads
 window.addEventListener('load', async () => {
   console.log("🚀 Starting Edge AI Face Recognition");
 
-  // Check browser support first
   if (!checkBrowserSupport()) {
     return;
   }
 
-  // Disable buttons initially
   const predictBtn = document.getElementById('predict-btn');
   const switchBtn = document.getElementById('switch-camera-btn');
+  const perfBtn = document.getElementById('performance-btn');
 
   if (predictBtn) {
     predictBtn.disabled = true;
@@ -302,7 +375,11 @@ window.addEventListener('load', async () => {
     switchBtn.style.opacity = '0.5';
   }
 
-  // Load models and setup webcam simultaneously
+  if (perfBtn) {
+    perfBtn.disabled = true;
+    perfBtn.style.opacity = '0.5';
+  }
+
   try {
     await Promise.all([
       loadModels(),
@@ -318,6 +395,7 @@ window.addEventListener('load', async () => {
 document.addEventListener('DOMContentLoaded', () => {
   const predictBtn = document.getElementById('predict-btn');
   const switchBtn = document.getElementById('switch-camera-btn');
+  const perfBtn = document.getElementById('performance-btn');
 
   if (predictBtn) {
     predictBtn.addEventListener('click', predict);
@@ -325,5 +403,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (switchBtn) {
     switchBtn.addEventListener('click', switchCamera);
+  }
+
+  if (perfBtn) {
+    perfBtn.addEventListener('click', downloadPerformanceData);
   }
 });

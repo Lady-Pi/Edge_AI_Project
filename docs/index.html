@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +18,7 @@
 <body>
   <div class="container">
     <h1>Edge AI - Face Attribute Recognition</h1>
-    <p class="subtitle">Real-time Age, Gender & Emotion Detection</p>
+    <p class="subtitle">Real-time Age, Gender & Emotion Detection with Performance Monitoring</p>
 
     <!-- Camera Status -->
     <div id="camera-status" class="status">Initializing camera...</div>
@@ -37,6 +36,7 @@
     <div class="controls">
       <button id="predict-btn" disabled>Predict</button>
       <button id="switch-camera-btn" disabled>Switch to Back Camera</button>
+      <button id="performance-btn" disabled>Download Performance Data</button>
     </div>
 
     <!-- Results -->
@@ -55,6 +55,22 @@
       </div>
     </div>
 
+    <!-- Performance Info -->
+    <div class="performance-info">
+      <h3>Performance Testing Guide:</h3>
+      <ol>
+        <li><strong>Test with 20 images:</strong> Use back camera to photograph stock images on screen</li>
+        <li><strong>Record results manually:</strong> Note if each prediction is correct or incorrect</li>
+        <li><strong>Download data:</strong> Click "Download Performance Data" to get timing metrics</li>
+        <li><strong>Images needed:</strong>
+          <ul>
+            <li>10 Adult (5 male/5 female, 5 happy/5 sad)</li>
+            <li>10 Elderly (5 male/5 female, 5 happy/5 sad)</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
     <!-- Instructions -->
     <div class="instructions">
       <h3>Instructions:</h3>
@@ -64,6 +80,7 @@
         <li>Use "Switch to Back Camera" to photograph others or test images</li>
         <li>Click "Predict" to analyze the face in view</li>
         <li>View the AI predictions below</li>
+        <li>Use "Download Performance Data" to export timing metrics</li>
       </ol>
     </div>
 

@@ -264,9 +264,9 @@ async function predict() {
       preprocessTime: preprocessTime,
       inferenceTime: inferenceTime,
       predictions: {
-        age: { value: ageProb, label: ageProb > 0.5 ? 'Elderly' : 'Adult' },        // ✅ This one was already correct
-          gender: { value: genderProb, label: genderProb > 0.5 ? 'Female' : 'Male' }, // ✅ FIXED: Flipped Male/Female
-            emotion: { value: emotionProb, label: emotionProb > 0.5 ? 'Sad' : 'Happy' }  // ✅ This one was already correct
+        age: { value: ageProb, label: ageProb > 0.5 ? 'Elderly' : 'Adult' },        // 
+          gender: { value: genderProb, label: genderProb > 0.5 ? 'Female' : 'Male' }, //
+            emotion: { value: emotionProb, label: emotionProb > 0.5 ? 'Sad' : 'Happy' }  //
       }
     };
 

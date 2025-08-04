@@ -36,7 +36,8 @@
     <div class="controls">
       <button id="predict-btn" disabled>Predict</button>
       <button id="switch-camera-btn" disabled>Switch to Back Camera</button>
-      <button id="performance-btn" disabled>Download Performance Data</button>
+      <!-- Hidden performance button - accessible via console for testing -->
+      <button id="performance-btn" disabled style="display:none;">Download Performance Data</button>
     </div>
 
     <!-- Results -->
@@ -55,21 +56,7 @@
       </div>
     </div>
 
-    <!-- Performance Info -->
-    <div class="performance-info">
-      <h3>Performance Testing Guide:</h3>
-      <ol>
-        <li><strong>Test with 20 images:</strong> Use back camera to photograph stock images on screen</li>
-        <li><strong>Record results manually:</strong> Note if each prediction is correct or incorrect</li>
-        <li><strong>Download data:</strong> Click "Download Performance Data" to get timing metrics</li>
-        <li><strong>Images needed:</strong>
-          <ul>
-            <li>10 Adult (5 male/5 female, 5 happy/5 sad)</li>
-            <li>10 Elderly (5 male/5 female, 5 happy/5 sad)</li>
-          </ul>
-        </li>
-      </ol>
-    </div>
+
 
     <!-- Instructions -->
     <div class="instructions">
@@ -80,7 +67,13 @@
         <li>Use "Switch to Back Camera" to photograph others or test images</li>
         <li>Click "Predict" to analyze the face in view</li>
         <li>View the AI predictions below</li>
-        <li>Use "Download Performance Data" to export timing metrics</li>
+      </ol>
+
+      <!-- Developer/Testing Instructions (hidden by default) -->
+      <details style="margin-top: 15px;">
+        <summary style="cursor: pointer; font-weight: bold;">Developer/Testing Mode</summary>
+        <p style="margin-top: 10px;"><strong>For performance testing:</strong> Open browser console and type <code>document.getElementById('performance-btn').style.display='inline-block'</code> to show performance download button.</p>
+      </details>
       </ol>
     </div>
 

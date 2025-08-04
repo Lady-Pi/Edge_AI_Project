@@ -264,9 +264,9 @@ async function predict() {
       preprocessTime: preprocessTime,
       inferenceTime: inferenceTime,
       predictions: {
-        age: { value: ageProb, label: ageProb > 0.5 ? 'Elderly' : 'Adult' },
-        gender: { value: genderProb, label: genderProb > 0.5 ? 'Male' : 'Female' },
-        emotion: { value: emotionProb, label: emotionProb > 0.5 ? 'Sad' : 'Happy' }
+        age: { value: ageProb, label: ageProb > 0.5 ? 'Elderly' : 'Adult' },        // ✅ This one was already correct
+          gender: { value: genderProb, label: genderProb > 0.5 ? 'Female' : 'Male' }, // ✅ FIXED: Flipped Male/Female
+            emotion: { value: emotionProb, label: emotionProb > 0.5 ? 'Sad' : 'Happy' }  // ✅ This one was already correct
       }
     };
 
@@ -313,15 +313,6 @@ async function predict() {
     alert('Prediction failed: ' + error.message);
   }
 }
-
-function downloadCanvasImage() {
-  const canvas = document.getElementById('canvas');
-  const link = document.createElement('a');
-  link.download = `webcam_capture_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-}
-
 
 function downloadPerformanceData() {
   if (!window.performanceLog || window.performanceLog.length === 0) {

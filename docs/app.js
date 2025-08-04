@@ -1,4 +1,6 @@
 let ageModel, genderModel, emotionModel;
+let currentStream = null;
+let currentFacingMode = 'user'; // 'user' for front camera, 'environment' for back camera
 
 // Check if browser supports required APIs
 function checkBrowserSupport() {
@@ -67,7 +69,7 @@ async function loadModels() {
     if (predictBtn) {
       predictBtn.disabled = false;
       predictBtn.style.opacity = '1';
-      predictBtn.textContent = '🔮 Predict';
+      predictBtn.textContent = 'Predict';
     }
 
     // Update status
@@ -95,6 +97,25 @@ async function loadModels() {
   }
 }
 
+async function switchCamera() {
+  // Toggle facing mode
+  currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+
+  // Stop current stream if it exists
+  if (currentStream) {
+    currentStream.getTracks().forEach(track => track.stop());
+  }
+
+  // Update button text
+  const switchBtn = document.getElementById('switch-camera-btn');
+  if (switchBtn) {
+    switchBtn.textContent = currentFacingMode === 'user' ? 'Switch to Back Camera' : 'Switch to Front Camera';
+  }
+
+  // Setup webcam with new facing mode
+  await setupWebcam();
+}
+
 async function setupWebcam() {
   console.log("🔄 Requesting camera access...");
   const webcam = document.getElementById('webcam');
@@ -109,11 +130,12 @@ async function setupWebcam() {
       video: {
         width: { ideal: 320 },
         height: { ideal: 240 },
-        facingMode: 'user' // Front-facing camera
+        facingMode: currentFacingMode
       }
     };
 
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    currentStream = stream; // Store the current stream
     console.log("✅ Camera stream obtained");
 
     webcam.srcObject = stream;
@@ -126,8 +148,15 @@ async function setupWebcam() {
     // Show success message
     const statusDiv = document.getElementById('camera-status');
     if (statusDiv) {
-      statusDiv.textContent = '✅ Camera ready';
+      statusDiv.textContent = `✅ Camera ready (${currentFacingMode === 'user' ? 'Front' : 'Back'})`;
       statusDiv.style.color = 'green';
+    }
+
+    // Enable camera switch button
+    const switchBtn = document.getElementById('switch-camera-btn');
+    if (switchBtn) {
+      switchBtn.disabled = false;
+      switchBtn.style.opacity = '1';
     }
 
   } catch (error) {
@@ -258,12 +287,19 @@ window.addEventListener('load', async () => {
     return;
   }
 
-  // Disable predict button initially
+  // Disable buttons initially
   const predictBtn = document.getElementById('predict-btn');
+  const switchBtn = document.getElementById('switch-camera-btn');
+
   if (predictBtn) {
     predictBtn.disabled = true;
     predictBtn.style.opacity = '0.5';
-    predictBtn.textContent = '⏳ Loading...';
+    predictBtn.textContent = 'Loading...';
+  }
+
+  if (switchBtn) {
+    switchBtn.disabled = true;
+    switchBtn.style.opacity = '0.5';
   }
 
   // Load models and setup webcam simultaneously
@@ -278,10 +314,16 @@ window.addEventListener('load', async () => {
   }
 });
 
-// Add predict button event listener
+// Add event listeners
 document.addEventListener('DOMContentLoaded', () => {
   const predictBtn = document.getElementById('predict-btn');
+  const switchBtn = document.getElementById('switch-camera-btn');
+
   if (predictBtn) {
     predictBtn.addEventListener('click', predict);
+  }
+
+  if (switchBtn) {
+    switchBtn.addEventListener('click', switchCamera);
   }
 });

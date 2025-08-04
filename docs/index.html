@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,14 +18,14 @@
 </head>
 <body>
   <div class="container">
-    <h1>🤖 Edge AI - Face Attribute Recognition</h1>
+    <h1>Edge AI - Face Attribute Recognition</h1>
     <p class="subtitle">Real-time Age, Gender & Emotion Detection</p>
 
     <!-- Camera Status -->
-    <div id="camera-status" class="status">⏳ Initializing camera...</div>
+    <div id="camera-status" class="status">Initializing camera...</div>
 
     <!-- Model Status -->
-    <div id="model-status" class="status">⏳ Loading AI models...</div>
+    <div id="model-status" class="status">Loading AI models...</div>
 
     <!-- Video Feed -->
     <div class="video-container">
@@ -34,44 +35,47 @@
 
     <!-- Controls -->
     <div class="controls">
-      <button id="predict-btn" disabled>🔮 Predict</button>
+      <button id="predict-btn" disabled>Predict</button>
+      <button id="switch-camera-btn" disabled>Switch to Back Camera</button>
     </div>
 
     <!-- Results -->
     <div id="results" class="results">
       <div class="result-item">
-        <span class="label">👤 Age:</span>
+        <span class="label">Age:</span>
         <span id="age-result" class="value">-</span>
       </div>
       <div class="result-item">
-        <span class="label">⚥ Gender:</span>
+        <span class="label">Gender:</span>
         <span id="gender-result" class="value">-</span>
       </div>
       <div class="result-item">
-        <span class="label">😊 Emotion:</span>
+        <span class="label">Emotion:</span>
         <span id="emotion-result" class="value">-</span>
       </div>
     </div>
 
     <!-- Instructions -->
     <div class="instructions">
-      <h3>📋 Instructions:</h3>
+      <h3>Instructions:</h3>
       <ol>
         <li>Allow camera access when prompted</li>
         <li>Position your face in the camera view</li>
-        <li>Click "Predict" to analyze your face</li>
+        <li>Use "Switch to Back Camera" to photograph others or test images</li>
+        <li>Click "Predict" to analyze the face in view</li>
         <li>View the AI predictions below</li>
       </ol>
     </div>
 
     <!-- Troubleshooting -->
     <div class="troubleshooting">
-      <h3>⚠️ Having issues?</h3>
+      <h3>Having issues?</h3>
       <ul>
         <li>Make sure you're using <strong>HTTPS</strong></li>
         <li>Allow camera permissions in your browser</li>
         <li>Use a modern browser (Chrome, Firefox, Safari)</li>
         <li>Check that your camera is not being used by another app</li>
+        <li>Try switching between front and back cameras</li>
       </ul>
     </div>
   </div>

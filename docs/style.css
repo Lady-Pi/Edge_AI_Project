@@ -63,6 +63,10 @@ video {
 .controls {
   text-align: center;
   margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 button {
@@ -90,6 +94,16 @@ button:disabled {
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+#switch-camera-btn {
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+#switch-camera-btn:hover:not(:disabled) {
+  background: linear-gradient(45deg, #c0392b, #e74c3c);
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6);
 }
 
 .results {
@@ -191,9 +205,16 @@ button:disabled {
     max-width: 300px;
   }
 
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
   button {
     padding: 12px 25px;
     font-size: 16px;
+    width: 100%;
+    max-width: 250px;
   }
 
   .result-item {

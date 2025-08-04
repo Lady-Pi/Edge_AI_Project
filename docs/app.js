@@ -255,6 +255,12 @@ async function predict() {
     const genderProb = (await genderPred.data())[0];
     const emotionProb = (await emotionPred.data())[0];
 
+    console.log(`🧠 Raw Probabilities:`);
+    console.log(`- Age (Elderly > 0.5): ${ageProb.toFixed(3)}`);
+    console.log(`- Gender (Male > 0.5): ${genderProb.toFixed(3)}`);
+    console.log(`- Emotion (Sad > 0.5): ${emotionProb.toFixed(3)}`);
+
+
     const totalPredictionTime = performance.now() - predictionStartTime;
 
     // Store performance data

@@ -255,7 +255,7 @@ async function predict() {
     const genderProb = (await genderPred.data())[0];
     const emotionProb = (await emotionPred.data())[0];
 
-    console.log(`🧠 Raw Probabilities:`);
+    console.log(`  Raw Probabilities:`);
     console.log(`- Age (Elderly > 0.5): ${ageProb.toFixed(3)}`);
     console.log(`- Gender (Male > 0.5): ${genderProb.toFixed(3)}`);
     console.log(`- Emotion (Sad > 0.5): ${emotionProb.toFixed(3)}`);
@@ -284,9 +284,9 @@ async function predict() {
     const genderResult = document.getElementById('gender-result');
     const emotionResult = document.getElementById('emotion-result');
 
-    ageResult.innerText = performanceData.predictions.age.label;
-    genderResult.innerText = performanceData.predictions.gender.label;
-    emotionResult.innerText = performanceData.predictions.emotion.label;
+    ageResult.innerText = `${performanceData.predictions.age.label} (${(ageProb * 100).toFixed(1)}%)`;
+    genderResult.innerText = `${performanceData.predictions.gender.label} (${(genderProb * 100).toFixed(1)}%)`;
+    emotionResult.innerText = `${performanceData.predictions.emotion.label} (${(emotionProb * 100).toFixed(1)}%)`;
 
     // Add animation class
     ageResult.classList.add('updated');

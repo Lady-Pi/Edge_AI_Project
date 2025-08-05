@@ -291,7 +291,7 @@ const totalPredictionTime = performance.now() - predictionStartTime;
 
     ageResult.innerText = `${performanceData.predictions.age.label} (${(performanceData.predictions.age.confidence * 100).toFixed(1)}%)`;
     genderResult.innerText = `${performanceData.predictions.gender.label} (${(performanceData.predictions.gender.confidence * 100).toFixed(1)}%)`;
-    emotionResult.innerText = `${performanceData.predictions.emotion.label} (${(performanceData.prednce * 100).toFixed(1)}%)`;
+    emotionResult.innerText = `${performanceData.predictions.emotion.label} (${(performanceData.predictions.emotion.confidence * 100).toFixed(1)}%)`;
 
 
     // Add animation class

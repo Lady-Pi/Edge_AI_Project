@@ -265,18 +265,21 @@ async function predict() {
     const emotionLabel = emotionProb > 0.5 ? 'Sad' : 'Happy';
     const emotionConfidence = emotionLabel === 'Sad' ? emotionProb : 1 - emotionProb;
 
-    const performanceData = {
-    timestamp: new Date().toISOString(),
-    totalTime: totalPredictionTime,
-    preprocessTime: preprocessTime,
-    inferenceTime: inferenceTime,
-    predictions: {
-      age: { value: ageProb, label: ageLabel, confidence: ageConfidence },
-      gender: { value: genderProb, label: genderLabel, confidence: genderConfidence },
-      emotion: { value: emotionProb, label: emotionLabel, confidence: emotionConfidence }
-    }
-  };
+    const totalPredictionTime = performance.now() - predictionStartTime;
 
+    const performanceData = {
+      timestamp: new Date().toISOString(),
+      totalTime: totalPredictionTime,
+      preprocessTime: preprocessTime,
+      inferenceTime: inferenceTime,
+      predictions: {
+        age: { value: ageProb, label: ageLabel, confidence: ageConfidence },
+        gender: { value: genderProb, label: genderLabel, confidence: genderConfidence },
+        emotion: { value: emotionProb, label: emotionLabel, confidence: emotionConfidence }
+      }
+    };
+
+const totalPredictionTime = performance.now() - predictionStartTime;
 
     performanceLog.push(performanceData);
     window.performanceLog = performanceLog; // Make available globally

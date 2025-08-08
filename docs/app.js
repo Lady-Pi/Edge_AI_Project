@@ -31,13 +31,13 @@ async function testSingleModel(path, modelName) {
       throw new Error(`File not found: ${path} (Status: ${response.status})`);
     }
 
-    console.log(`📁 ${modelName} file exists`);
+    console.log(`${modelName} file exists`);
 
     // Try to load the model
     const model = await tf.loadLayersModel(path);
     const loadTime = performance.now() - startTime;
 
-    console.log(`✅ ${modelName} model loaded successfully in ${loadTime.toFixed(2)}ms`);
+    console.log(`${modelName} model loaded successfully in ${loadTime.toFixed(2)}ms`);
 
     // Store performance data
     const modelSize = await fetch(path).then(r => r.headers.get('content-length') || 'Unknown');
@@ -51,7 +51,7 @@ async function testSingleModel(path, modelName) {
     return model;
 
   } catch (error) {
-    console.error(`❌ Failed to load ${modelName}:`, error.message);
+    console.error(`Failed to load ${modelName}:`, error.message);
     throw error;
   }
 }
@@ -69,7 +69,7 @@ async function loadModels() {
       emotion: './models/emotion/model.json'
     };
 
-    // Load each model individually with detailed error reporting
+    // Load each model individually with error reporting
     ageModel = await testSingleModel(modelPaths.age, 'Age');
     genderModel = await testSingleModel(modelPaths.gender, 'Gender');
     emotionModel = await testSingleModel(modelPaths.emotion, 'Emotion');
@@ -194,7 +194,7 @@ async function setupWebcam() {
 
     const statusDiv = document.getElementById('camera-status');
     if (statusDiv) {
-      statusDiv.textContent = '❌ Camera failed';
+      statusDiv.textContent = 'Camera failed';
       statusDiv.style.color = 'red';
     }
   }
@@ -231,7 +231,7 @@ async function predict() {
     }
 
     const predictionStartTime = performance.now();
-    console.log("🔄 Running prediction...");
+    console.log("Running prediction...");
 
     // Draw current frame to canvas
     ctx.drawImage(webcam, 0, 0, canvas.width, canvas.height);
@@ -305,9 +305,9 @@ async function predict() {
       emotionResult.classList.remove('updated');
     }, 600);
 
-    console.log("✅ Prediction completed");
-    console.log(`⏱️ Total time: ${totalPredictionTime.toFixed(2)}ms`);
-    console.log(`📊 Preprocessing: ${preprocessTime.toFixed(2)}ms, Inference: ${inferenceTime.toFixed(2)}ms`);
+    console.log("Prediction completed");
+    console.log(`Total time: ${totalPredictionTime.toFixed(2)}ms`);
+    console.log(`Preprocessing: ${preprocessTime.toFixed(2)}ms, Inference: ${inferenceTime.toFixed(2)}ms`);
     console.log(`Age: ${performanceData.predictions.age.label} (${ageProb.toFixed(3)})`);
     console.log(`Gender: ${performanceData.predictions.gender.label} (${genderProb.toFixed(3)})`);
     console.log(`Emotion: ${performanceData.predictions.emotion.label} (${emotionProb.toFixed(3)})`);
@@ -321,7 +321,7 @@ async function predict() {
     emotionPred.dispose();
 
   } catch (error) {
-    console.error("❌ Prediction error:", error);
+    console.error("Prediction error:", error);
     alert('Prediction failed: ' + error.message);
   }
 }
@@ -361,12 +361,12 @@ function downloadPerformanceData() {
   link.click();
 
   URL.revokeObjectURL(url);
-  console.log('📥 Performance data downloaded');
+  console.log('Performance data downloaded');
 }
 
 // Initialize everything when page loads
 window.addEventListener('load', async () => {
-  console.log("🚀 Starting Edge AI Face Recognition");
+  console.log("Starting Edge AI Face Recognition");
 
   if (!checkBrowserSupport()) {
     return;
@@ -397,9 +397,9 @@ window.addEventListener('load', async () => {
       loadModels(),
       setupWebcam()
     ]);
-    console.log("✅ Initialization complete");
+    console.log("Initialization complete");
   } catch (error) {
-    console.error("❌ Initialization failed:", error);
+    console.error("Initialization failed:", error);
   }
 });
 

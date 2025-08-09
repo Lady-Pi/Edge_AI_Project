@@ -24,10 +24,11 @@ Student: Lisa van der Linden | M9218894
 
 1. Access the brower's developer/test mode via F12 or Right-click → Inspect → Console
 
-2. Copy and paste the below command (enable pasting function first if needed):
+2. Copy and paste the below command (enable pasting function if needed):
 
    document.getElementById('performance-btn').style.display='inline-block'
 
 3. Press Enter. The "Download Performance Data" button will now apear in the UI. 
+
 
 

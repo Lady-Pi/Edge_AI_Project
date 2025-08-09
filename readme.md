@@ -10,13 +10,15 @@ Student: Lisa van der Linden | M9218894
 
 1. Open the web-page on your favourite mobile or desktop browser.
 
-2. Switch between front or back camera.
+https://lady-pi.github.io/Edge_AI_Project/
 
-3. For best results, make sure your face is centered in the field, not blurred,  and close to the camera. 
+3. Switch between front or back camera.
 
-4. Click "predict". 
+4. For best results, make sure your face is centered in the field, not blurred,  and close to the camera. 
 
-5. The models will print binary classification labels for age (adult/elderly), gender (male/female), and emotion (happy/sad). The confidence levels are printed with the predictions. 
+5. Click "predict". 
+
+6. The models will print binary classification labels for age (adult/elderly), gender (male/female), and emotion (happy/sad). The confidence levels are printed with the predictions. 
 
 # Download performance data
 
@@ -27,3 +29,4 @@ Student: Lisa van der Linden | M9218894
 document.getElementById('performance-btn').style.display='inline-block'
 
 3. Press Enter. The "Download Performance Data" button will now apear in the UI. 
+

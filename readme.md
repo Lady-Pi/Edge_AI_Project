@@ -10,7 +10,7 @@ Student: Lisa van der Linden | M9218894
 
 1. Open the web-page on your favourite mobile or desktop browser.
 
-https://lady-pi.github.io/Edge_AI_Project/
+   https://lady-pi.github.io/Edge_AI_Project/
 
 3. Switch between front or back camera.
 
@@ -26,7 +26,8 @@ https://lady-pi.github.io/Edge_AI_Project/
 
 2. Copy and paste the below command (enable pasting function first if needed):
 
-document.getElementById('performance-btn').style.display='inline-block'
+   document.getElementById('performance-btn').style.display='inline-block'
 
 3. Press Enter. The "Download Performance Data" button will now apear in the UI. 
+
 

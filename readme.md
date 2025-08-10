@@ -8,9 +8,11 @@ Student: Lisa van der Linden | M9218894
 
 # How to use
 
-1. Open the web-page on your favourite mobile or desktop browser.
+1. Open the web-page on your favourite mobile browser, or scan the QR code
 
    https://lady-pi.github.io/Edge_AI_Project/
+
+   ![QR Code](data/images/QR_code.png)
 
 3. Switch between front or back camera.
 
@@ -29,6 +31,7 @@ Student: Lisa van der Linden | M9218894
    document.getElementById('performance-btn').style.display='inline-block'
 
 3. Press Enter. The "Download Performance Data" button will now apear in the UI. 
+
 
 
 

@@ -20,18 +20,6 @@ Student: Lisa van der Linden | M9218894
 
 5. Click "predict". 
 
-6. The models will print binary classification labels for age (adult/elderly), gender (male/female), and emotion (happy/sad). The confidence levels are printed with the predictions. 
+6. The models will print binary classification labels for age (adult/elderly), gender (male/female), and emotion (happy/sad). The confidence levels are printed with the predictions.
 
-# Download performance data
-
-1. Access the brower's developer/test mode via F12 or Right-click → Inspect → Console
-
-2. Copy and paste the below command (enable pasting function if needed):
-
-   document.getElementById('performance-btn').style.display='inline-block'
-
-3. Press Enter. The "Download Performance Data" button will now apear in the UI. 
-
-
-
-
+7. Optional: "Download Performance Data" for testing purposes.

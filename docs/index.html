@@ -36,8 +36,7 @@
     <div class="controls">
       <button id="predict-btn" disabled>Predict</button>
       <button id="switch-camera-btn" disabled>Switch to Back Camera</button>
-      <!-- Hidden performance button - accessible via console for testing -->
-      <button id="performance-btn" disabled style="display:none;">Download Performance Data</button>
+      <button id="performance-btn" disabled>Download Performance Data</button>
     </div>
 
     <!-- Results -->
@@ -56,8 +55,6 @@
       </div>
     </div>
 
-
-
     <!-- Instructions -->
     <div class="instructions">
       <h3>Instructions:</h3>
@@ -67,13 +64,6 @@
         <li>Use "Switch to Back Camera" to photograph others or test images</li>
         <li>Click "Predict" to analyze the face in view</li>
         <li>View the AI predictions below</li>
-      </ol>
-
-      <!-- Developer/Testing Instructions (hidden by default) -->
-      <details style="margin-top: 15px;">
-        <summary style="cursor: pointer; font-weight: bold;">Developer/Testing Mode</summary>
-        <p style="margin-top: 10px;"><strong>For performance testing:</strong> Open browser console and type <code>document.getElementById('performance-btn').style.display='inline-block'</code> to show performance download button.</p>
-      </details>
       </ol>
     </div>
 
@@ -93,7 +83,7 @@
   <!-- Load TensorFlow.js -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0"></script>
 
-  <!-- Load our app -->
+  <!-- Load the app -->
   <script src="app.js"></script>
 </body>
 </html>
